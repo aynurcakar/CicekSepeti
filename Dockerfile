@@ -1,6 +1,5 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS base
 WORKDIR /app
-EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
@@ -20,4 +19,7 @@ RUN dotnet publish "Basket.Api.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Basket.api.dll"]
+ENV ASPNETCORE_URLS http://*:8080
+ENV ASPNETCORE_ENVIRONMENT docker
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "Basket.Api.dll"]

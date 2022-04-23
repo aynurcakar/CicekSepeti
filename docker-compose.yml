@@ -1,4 +1,4 @@
-﻿version: '3.8'
+version: '3.8'
 
 services:
 
@@ -25,11 +25,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5061:80"
+      - "8080:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
-    command: ["dotnet", "BasketApi.dll"]
+      - postgres
     
 volumes:
     database-data:
