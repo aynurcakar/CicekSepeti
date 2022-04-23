@@ -1,8 +1,7 @@
 ﻿version: '3.8'
-
 services:
 
-  postgres:
+    postgres:
       restart: always
       image: postgres
       ports:
@@ -11,25 +10,18 @@ services:
           - .env
       volumes:
         - database-data:/var/lib/postgresql/data/
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U postgres"]
-        interval: 5s
-        timeout: 5s
-        retries: 5
-
+     
   cicekbasket:
     image: 'cicekbasket'
     environment:
-        - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Development
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "5061:80"
     depends_on:
-      postgres:
-        condition: service_healthy
-    command: ["dotnet", "BasketApi.dll"]
-    
-volumes:
-    database-data:
+      - postgres
+
+ volumes:
+  database-data:
