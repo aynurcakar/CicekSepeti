@@ -1,0 +1,27 @@
+﻿version: '3.8'
+services:
+
+    postgres:
+      restart: always
+      image: postgres
+      ports:
+        - 5432:5432
+      env_file:
+          - .env
+      volumes:
+        - database-data:/var/lib/postgresql/data/
+     
+  cicekbasket:
+    image: 'cicekbasket'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5061:80"
+    depends_on:
+      - postgres
+
+ volumes:
+  database-data:

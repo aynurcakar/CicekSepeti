@@ -33,7 +33,7 @@ namespace Basket.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BasketDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),b=>b.MigrationsAssembly("Basket.Api")));
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),b=>b.MigrationsAssembly("Basket.Api")));
  
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IBasketRepository, BasketRepository>();
@@ -66,6 +66,11 @@ namespace Basket.Api
             {
                 endpoints.MapControllers();
             });
+
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<BasketDbContext>().Database.Migrate();
+            }
         }
     }
 }
